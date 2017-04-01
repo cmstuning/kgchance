@@ -12,5 +12,15 @@
     <button md-raised-button (click)="onIdSubmit(childId.value)">Check!</button>
   
   </div>
+  <div *ngIf="dataArrived">
+  <div *ngFor="let chance of chances">
+<md-card>
+ <p>Carden: {{chance.garden}} </p>
+ <p>Place: {{chance.place}} </p>
+ <p>Priority: {{chance.priority}} </p>
+ <p>Chance: {{chance.chance}} </p>
+</md-card>
+  </div>
+  </div>
   </div>
 </div>
