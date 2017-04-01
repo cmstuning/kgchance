@@ -5,11 +5,11 @@
     <div fxFlex="50" fxflexoffset="25">
     <md-input-container class="example-full-width">
       <input mdInput #childId maxlength="10" placeholder="Child ID" value="">
-      <!--<md-hint align="end">{{postalCode.value.length}} / 5</md-hint>-->
+      <md-hint align="end">{{childId.value.length}} / 10</md-hint>
     </md-input-container>
     <div class="button-row">
    
-    <button md-raised-button (click)="onCheck">Check!</button>
+    <button md-raised-button (click)="onIdSubmit(childId.value)">Check!</button>
   
   </div>
   </div>
