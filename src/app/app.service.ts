@@ -45,8 +45,6 @@ export class AppService {
           priorityQueue[garden].sort(AppService.compareByPriorityAndPlaceDesc);
         }
 
-        console.log(priorityQueue['Gėlynas']);
-
         return priorityQueue;
       })
       .subscribe(this.priorityQueue);
