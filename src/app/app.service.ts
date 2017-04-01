@@ -104,6 +104,7 @@ export class AppService {
 
     for (const chosenGarden of Object.keys(priorityQueue)) {
       const gardenQueue = priorityQueue[chosenGarden];
+      const gardenQuota = 20;
 
       const queuePlace = AppService.findQueuePlace(gardenQueue, personalNo);
       let realPlace = queuePlace;
@@ -121,7 +122,7 @@ export class AppService {
             }
           }
         }
-        chances.push({garden: chosenGarden, chance: ((realPlace + 1) < 20 ? 'high' : 'low')});
+        chances.push({garden: chosenGarden, chance: ((realPlace + 1) < gardenQuota ? 'high' : 'low')});
       }
     }
 
