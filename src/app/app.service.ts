@@ -20,12 +20,7 @@ export class AppService {
         for (const person of rawData) {
           persons.push(person.personalNo);
 
-          const priority = person.priorities.reduce((prevValue, isPriority) => {
-            if (isPriority) {
-              return prevValue + 1;
-            }
-            return prevValue;
-          }, 0);
+          const priority = AppService.computePriority(person.priorities);
 
           for (const choice of person.choices) {
             const garden = choice.garden;
@@ -41,19 +36,7 @@ export class AppService {
         this.persons.next(persons);
 
         for (const garden of Object.keys(priorityQueue)) {
-          priorityQueue[garden].sort((left, right) => {
-            if (left.priority < right.priority) {
-              return -1;
-            }
-
-            if (left.priority > right.priority) {
-              return 1;
-            }
-
-            if (left.priority === right.priority) {
-              return (left.place - right.place) < 0 ? -1 : 1;
-            }
-          });
+          priorityQueue[garden].sort(AppService.compareByPriorityAndPlace);
         }
 
         return priorityQueue;
@@ -93,6 +76,26 @@ export class AppService {
       });
   }
 
+  private static computePriority(priorities: boolean[]) {
+    return priorities.reduce((prevValue, isPriority) => {
+      return (isPriority ? (prevValue + 1) : prevValue);
+    }, 0);
+  }
+
+  private static compareByPriorityAndPlace(left, right) {
+    if (left.priority < right.priority) {
+      return -1;
+    }
+
+    if (left.priority > right.priority) {
+      return 1;
+    }
+
+    if (left.priority === right.priority) {
+      return (left.place - right.place) < 0 ? -1 : 1;
+    }
+  }
+
   private static findQueuePlace(queue, personalNo: string): number {
     return queue.findIndex((person) => {
       return person.personalNo === personalNo;
@@ -127,7 +130,8 @@ export class AppService {
           garden: chosenGarden,
           place: relatedInfo.place,
           priority: relatedInfo.priority,
-          chance: ((realPlace + 1) < gardenQuota ? 'high' : 'low')});
+          chance: ((realPlace + 1) < gardenQuota ? 'high' : 'low')
+        });
       }
     }
 
