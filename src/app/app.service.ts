@@ -110,6 +110,7 @@ export class AppService {
       let realPlace = queuePlace;
 
       if (realPlace !== -1) {
+        const relatedInfo = gardenQueue[queuePlace];
         for (let i = 0; i < queuePlace; i++) {
           const person = gardenQueue[i];
           for (const garden of Object.keys(priorityQueue)) {
@@ -122,7 +123,11 @@ export class AppService {
             }
           }
         }
-        chances.push({garden: chosenGarden, chance: ((realPlace + 1) < gardenQuota ? 'high' : 'low')});
+        chances.push({
+          garden: chosenGarden,
+          place: relatedInfo.place,
+          priority: relatedInfo.priority,
+          chance: ((realPlace + 1) < gardenQuota ? 'high' : 'low')});
       }
     }
 
