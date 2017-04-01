@@ -162,7 +162,7 @@ export class AppService {
           place: relatedInfo.place,
           realPlace: realPlace,
           priority: relatedInfo.priority,
-          chance: AppService.computeChance(gardenQuota, realPlace),
+          // chance: AppService.computeChance(gardenQuota, realPlace),
           relative: realPlace - gardenQuota
         });
       }
@@ -171,10 +171,7 @@ export class AppService {
     return chances;
   }
 
-  private static computeChance(quota, place) {
-    if (place >= quota) {
-      return 0;
-    }
-    return Math.round(((quota - place) / quota) * 100);
-  }
+  // private static computeChance(queueLength, place) {
+  //   return Math.round((queueLength - place) / queueLength * 100.0);
+  // }
 }
