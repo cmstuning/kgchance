@@ -59,8 +59,14 @@ export class AppService {
     return this.priorityQueue
       .take(1)
       .combineLatest(this.gardenService.getQuotas(), (priorityQueue, gardenQuotas) => {
-        return AppService.computeChances(priorityQueue, gardenQuotas, personalNo);
-      });
+        const result = AppService.computeChances(priorityQueue, gardenQuotas, personalNo);
+
+        if (result.length === 0) {
+          return Observable.throw(new Error('There are no data'));
+        }
+        return Observable.of(result);
+      })
+      .switch();
   }
 
   private static computePriority(priorities: boolean[]) {
