@@ -1,14 +1,14 @@
 import {Injectable} from "@angular/core";
 import {Observable, ReplaySubject, Subject} from "rxjs";
 import {Headers, Http} from "@angular/http";
-import {GardenService} from "./garden.service";
+import {GardenQuotaService} from "./garden-quota.service";
 
 @Injectable()
 export class AppService {
   private persons: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   private priorityQueue: ReplaySubject<any> = new ReplaySubject<any>(1);
 
-  constructor(http: Http, private gardenService: GardenService) {
+  constructor(http: Http, private gardenService: GardenQuotaService) {
     const options = {headers: new Headers({'Accept': 'application/json'})};
 
     http.get('assets/raw-data.json', options)
@@ -57,26 +57,6 @@ export class AppService {
       });
   }
 
-  // public computeChancesAll(limit: number = 10, offset: number = 0): Observable<any[]> {
-  //   return this.persons
-  //     .take(1)
-  //     .combineLatest(this.priorityQueue, (persons, priorityQueue) => {
-  //       console.log('Hello1');
-  //       const result = [];
-  //
-  //       for (let i = offset; i < limit; i++) {
-  //         const personalNo = persons[i];
-  //
-  //         result.push({
-  //           personalNo: personalNo,
-  //           chances: AppService.computeChances(priorityQueue, personalNo)
-  //         });
-  //       }
-  //
-  //       return result;
-  //     });
-  // }
-
   private static computePriority(priorities: boolean[]) {
     return priorities.reduce((prevValue, isPriority) => {
       return (isPriority ? (prevValue + 1) : prevValue);
@@ -103,14 +83,11 @@ export class AppService {
     });
   }
 
-  private static findGardenQuota(gardenQuotas, garden) {
-    const index = gardenQuotas.findIndex((el) => {
-      return el.garden === garden;
-    });
-
-    if (index !== -1) {
-      return gardenQuotas[index].quota;
+  private static getGardenQuota(gardenQuotas, garden) {
+    if (gardenQuotas[garden] !== undefined) {
+      return gardenQuotas[garden];
     }
+    console.log('Missing quota for "' + garden + '"');
     return 0;
   }
 
@@ -124,7 +101,7 @@ export class AppService {
       let realPlace = queuePlace;
 
       if (realPlace !== -1) {
-        const gardenQuota = AppService.findGardenQuota(gardenQuotas, chosenGarden);
+        const gardenQuota = AppService.getGardenQuota(gardenQuotas, chosenGarden);
         const relatedInfo = gardenQueue[queuePlace];
         for (let i = 0; i < queuePlace; i++) {
           const person = gardenQueue[i];
@@ -138,9 +115,9 @@ export class AppService {
             }
           }
         }
-        console.log(gardenQuota);
         chances.push({
           garden: chosenGarden,
+          quota: gardenQuota,
           place: relatedInfo.place,
           priority: relatedInfo.priority,
           chance: AppService.computeChance(gardenQuota, relatedInfo.place)
@@ -155,6 +132,6 @@ export class AppService {
     if (place >= quota) {
       return 0;
     }
-    return 100 - ((quota - place) / quota) * 100;
+    return Math.round(100 - ((quota - place) / quota) * 100);
   }
 }
