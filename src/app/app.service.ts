@@ -37,8 +37,10 @@ export class AppService {
         this.persons.next(persons);
 
         for (const garden of Object.keys(priorityQueue)) {
-          priorityQueue[garden].sort(AppService.compareByPriorityAndPlace);
+          priorityQueue[garden].sort(AppService.compareByPriorityAndPlaceDesc);
         }
+
+        console.log(priorityQueue['Gėlynas']);
 
         return priorityQueue;
       })
@@ -63,17 +65,17 @@ export class AppService {
     }, 0);
   }
 
-  private static compareByPriorityAndPlace(left, right) {
-    if (left.priority < right.priority) {
+  private static compareByPriorityAndPlaceDesc(left, right) {
+    if (left.priority > right.priority) {
       return -1;
     }
 
-    if (left.priority > right.priority) {
+    if (left.priority < right.priority) {
       return 1;
     }
 
     if (left.priority === right.priority) {
-      return (left.place - right.place) < 0 ? -1 : 1;
+      return (left.place - right.place) < 0 ? 1 : -1;
     }
   }
 
@@ -125,8 +127,8 @@ export class AppService {
               const j = getQueuePlace(garden, person.personalNo);
 
               if (j !== -1 && j < i) {
-                console.log('Hit');
                 --realPlace;
+                break;
               }
             }
           }
@@ -135,8 +137,9 @@ export class AppService {
           garden: chosenGarden,
           quota: gardenQuota,
           place: relatedInfo.place,
+          realPlace: realPlace,
           priority: relatedInfo.priority,
-          chance: AppService.computeChance(gardenQuota, relatedInfo.place)
+          chance: AppService.computeChance(gardenQuota, realPlace)
         });
       }
     }
