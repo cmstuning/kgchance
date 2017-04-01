@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 
 import { MaterialModule } from '@angular/material';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { GardenService } from './garden.service';
@@ -17,7 +19,8 @@ import { GardenService } from './garden.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule
+    MaterialModule,
+    FlexLayoutModule
   ],
   providers: [
     AppService,
