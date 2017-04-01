@@ -144,8 +144,6 @@ export class AppService {
       }
     }
 
-    console.log(queuePlaceCache);
-
     return chances;
   }
 
