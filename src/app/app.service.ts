@@ -162,6 +162,7 @@ export class AppService {
           place: relatedInfo.place,
           realPlace: realPlace,
           priority: relatedInfo.priority,
+          queueLength: gardenQueue.length,
           // chance: AppService.computeChance(gardenQuota, realPlace),
           relative: realPlace - gardenQuota
         });
