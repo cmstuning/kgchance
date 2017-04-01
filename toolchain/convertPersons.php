@@ -18,28 +18,28 @@ while (($cswRowData = fgetcsv($csvFile, 100000, ';')) !== FALSE) {
 
   $record = [];
 
-  $record['id'] = $cswRowData[0];
-  $record['personalNo'] = $cswRowData[3];
+  $record['id'] = trim($cswRowData[0]);
+  $record['personalNo'] = trim($cswRowData[3]);
 
   $record['priorities'] = [
-    strtolower($cswRowData[7]) === 'taip',
-    strtolower($cswRowData[8]) === 'taip',
-    strtolower($cswRowData[9]) === 'taip',
-    strtolower($cswRowData[10]) === 'taip',
+    strtolower(trim($cswRowData[7])) === 'taip',
+    strtolower(trim($cswRowData[8])) === 'taip',
+    strtolower(trim($cswRowData[9])) === 'taip',
+    strtolower(trim($cswRowData[10])) === 'taip',
   ];
 
   $choices = [];
 
   for ($i = 11; $i < 61; $i += 10) {
-    if (isset($cswRowData[$i+5]) && !empty($cswRowData[$i+5]) && strtolower($cswRowData[$i+5]) !== 'nuo 1,5 iki 3 metų') {
+    if (isset($cswRowData[$i+5]) && !empty($cswRowData[$i+5]) && strtolower(trim($cswRowData[$i+5])) !== 'nuo 1,5 iki 3 metų') {
       $skipRecord = TRUE;
       break;
     }
 
     if (isset($cswRowData[$i]) && isset($cswRowData[$i+1])) {
       $choices[] = [
-        'garden' => $cswRowData[$i],
-        'place' => intval($cswRowData[$i+1]),
+        'garden' => trim($cswRowData[$i]),
+        'place' => intval(trim($cswRowData[$i+1])),
       ];
     }
   }

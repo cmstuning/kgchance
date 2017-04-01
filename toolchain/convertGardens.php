@@ -14,10 +14,10 @@ while (($cswRowData = fgetcsv($csvFile, 100000, ';')) !== FALSE) {
     continue;
   }
 
-  if (strtolower($cswRowData[6]) === 'nuo 1,5 iki 3 metų') {
+  if (strtolower(trim($cswRowData[6])) === 'nuo 1,5 iki 3 metų') {
     $data[] = [
-      'garden' => $cswRowData[0],
-      'quota' => intval($cswRowData[9])
+      'garden' => trim($cswRowData[0]),
+      'quota' => intval(trim($cswRowData[9]))
     ];
   }
 }
