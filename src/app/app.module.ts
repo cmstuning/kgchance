@@ -9,6 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { GardenService } from './garden.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AppService } from './app.service';
     FlexLayoutModule
   ],
   providers: [
-    AppService
+    AppService,
+    GardenService
   ],
   bootstrap: [AppComponent]
 })

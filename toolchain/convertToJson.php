@@ -14,6 +14,8 @@ while (($cswRowData = fgetcsv($csvFile, 100000, ';')) !== FALSE) {
     continue;
   }
 
+  $skipRecord = FALSE;
+
   $record = [];
 
   $record['id'] = $cswRowData[0];
@@ -29,12 +31,21 @@ while (($cswRowData = fgetcsv($csvFile, 100000, ';')) !== FALSE) {
   $choices = [];
 
   for ($i = 11; $i < 61; $i += 10) {
+    if (isset($cswRowData[$i+5]) && !empty($cswRowData[$i+5]) && strtolower($cswRowData[$i+5]) !== 'nuo 1,5 iki 3 metų') {
+      $skipRecord = TRUE;
+      break;
+    }
+
     if (isset($cswRowData[$i]) && isset($cswRowData[$i+1])) {
       $choices[] = [
         'garden' => $cswRowData[$i],
         'place' => intval($cswRowData[$i+1]),
       ];
     }
+  }
+
+  if ($skipRecord) {
+    continue;
   }
 
   $record['choices'] = $choices;
