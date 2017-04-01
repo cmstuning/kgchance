@@ -40,6 +40,10 @@ while (($cswRowData = fgetcsv($csvFile, 100000, ';')) !== FALSE) {
       $choices[] = [
         'garden' => trim($cswRowData[$i]),
         'place' => intval(trim($cswRowData[$i+1])),
+        'priorities' => [
+          strtolower(trim($cswRowData[$i+7])) === 'taip',
+          strtolower(trim($cswRowData[$i+8])) === 'taip',
+        ]
       ];
     }
   }

@@ -26,10 +26,15 @@ export class AppService {
           for (const choice of person.choices) {
             const garden = choice.garden;
             if (choice.place !== 0) {
+              const gardenPriority = AppService.computePriority(choice.priorities);
               if (priorityQueue[garden] === undefined) {
                 priorityQueue[garden] = [];
               }
-              priorityQueue[garden].push({personalNo: person.personalNo, priority: priority, place: choice.place});
+              priorityQueue[garden].push({
+                personalNo: person.personalNo,
+                priority: (priority + gardenPriority),
+                place: choice.place
+              });
             }
           }
         }
