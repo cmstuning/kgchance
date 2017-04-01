@@ -10,5 +10,7 @@ export class AppComponent {
   constructor(appService: AppService) {
 
   }
-  title = 'app works!';
+  onIdSubmit(id) {
+    console.log('you submitted', id);
+  }
 }
