@@ -91,13 +91,27 @@ export class AppService {
     return 0;
   }
 
-  private static computeChances(priorityQueue, gardenQuotas, personalNo): any[] {
+  private static computeChances(priorityQueue, gardenQuotas, personalNo, queuePlaceCache = {}): any[] {
     const chances = [];
+
+    function getQueuePlace(garden, personalNo_) {
+      if (queuePlaceCache[garden] === undefined) {
+        queuePlaceCache[garden] = {};
+      }
+
+      const gardenQueue = queuePlaceCache[garden];
+
+      if (gardenQueue[personalNo_] === undefined) {
+        return (gardenQueue[personalNo_] = AppService.findQueuePlace(priorityQueue[garden], personalNo_));
+      }
+      return gardenQueue[personalNo_];
+    }
 
     for (const chosenGarden of Object.keys(priorityQueue)) {
       const gardenQueue = priorityQueue[chosenGarden];
 
-      const queuePlace = AppService.findQueuePlace(gardenQueue, personalNo);
+      // const queuePlace = AppService.findQueuePlace(gardenQueue, personalNo);
+      const queuePlace = getQueuePlace(chosenGarden, personalNo);
       let realPlace = queuePlace;
 
       if (realPlace !== -1) {
@@ -107,9 +121,11 @@ export class AppService {
           const person = gardenQueue[i];
           for (const garden of Object.keys(priorityQueue)) {
             if (garden !== chosenGarden) {
-              const j = AppService.findQueuePlace(priorityQueue[garden], person.personalNo);
+              // const j = AppService.findQueuePlace(priorityQueue[garden], person.personalNo);
+              const j = getQueuePlace(garden, person.personalNo);
 
               if (j !== -1 && j < i) {
+                console.log('Hit');
                 --realPlace;
               }
             }
@@ -124,6 +140,8 @@ export class AppService {
         });
       }
     }
+
+    console.log(queuePlaceCache);
 
     return chances;
   }
