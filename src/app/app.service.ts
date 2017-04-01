@@ -132,6 +132,6 @@ export class AppService {
     if (place >= quota) {
       return 0;
     }
-    return 100 - ((quota - place) / quota) * 100;
+    return Math.round(100 - ((quota - place) / quota) * 100);
   }
 }
