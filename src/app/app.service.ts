@@ -42,16 +42,17 @@ export class AppService {
         this.persons.next(persons);
 
         for (const garden of Object.keys(priorityQueue)) {
-          priorityQueue[garden].sort(AppService.compareByPriorityAndPlaceDesc);
+          // priorityQueue[garden].sort(AppService.compareByPriorityAndPlaceDesc);
+          priorityQueue[garden].sort(AppService.compareByPlaceAsc);
         }
 
         return priorityQueue;
       })
       .subscribe(this.priorityQueue);
 
-    this.computeChances('1009065470').subscribe((result) => {
-      console.log(result);
-    });
+    // this.computeChances('1009065470').subscribe((result) => {
+    //   console.log(result);
+    // });
   }
 
   public computeChances(personalNo: string): Observable<any> {
@@ -66,6 +67,18 @@ export class AppService {
     return priorities.reduce((prevValue, isPriority) => {
       return (isPriority ? (prevValue + 1) : prevValue);
     }, 0);
+  }
+
+  private static compareByPlaceAsc(left, right) {
+    if (left.place < right.place) {
+      return -1;
+    }
+
+    if (left.place > right.place) {
+      return 1;
+    }
+
+    return 0;
   }
 
   private static compareByPriorityAndPlaceDesc(left, right) {
@@ -119,7 +132,7 @@ export class AppService {
       const queuePlace = getQueuePlace(chosenGarden, personalNo);
       let realPlace = queuePlace;
 
-      if (realPlace !== -1) {
+      if (queuePlace !== -1) {
         const gardenQuota = AppService.getGardenQuota(gardenQuotas, chosenGarden);
         const relatedInfo = gardenQueue[queuePlace];
         for (let i = 0; i < queuePlace; i++) {
@@ -129,10 +142,17 @@ export class AppService {
               // const j = AppService.findQueuePlace(priorityQueue[garden], person.personalNo);
               const j = getQueuePlace(garden, person.personalNo);
 
-              if (j !== -1 && j < i) {
-                --realPlace;
-                break;
+              if (j !== -1) {
+                if (j < AppService.getGardenQuota(gardenQuotas, garden)) {
+                  --realPlace;
+                  break;
+                }
               }
+
+              // if (j !== -1 && j < i) {
+              //   --realPlace;
+              //   break;
+              // }
             }
           }
         }
@@ -142,7 +162,8 @@ export class AppService {
           place: relatedInfo.place,
           realPlace: realPlace,
           priority: relatedInfo.priority,
-          chance: AppService.computeChance(gardenQuota, realPlace)
+          chance: AppService.computeChance(gardenQuota, realPlace),
+          relative: realPlace - gardenQuota
         });
       }
     }
@@ -154,6 +175,6 @@ export class AppService {
     if (place >= quota) {
       return 0;
     }
-    return Math.round(100 - ((quota - place) / quota) * 100);
+    return Math.round(((quota - place) / quota) * 100);
   }
 }
