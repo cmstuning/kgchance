@@ -1,10 +1,11 @@
+<div class="containerX">
 <div fxLayout="row" >
   
 
   <!--<div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">-->
-    <div fxFlex="50" fxflexoffset="25">
-    <md-input-container class="example-full-width">
-      <input mdInput #childId maxlength="10" placeholder="Child ID" value="">
+    <div fxFlex="50" fxFlexOffset="25">
+    <md-input-container style="width:100%;">
+      <input mdInput #childId maxlength="10" placeholder="Child ID" value="" style="text-align:center">
       <md-hint align="end">{{childId.value.length}} / 10</md-hint>
     </md-input-container>
     <div class="button-row">
@@ -23,4 +24,5 @@
   </div>
   </div>
   </div>
+</div>
 </div>
