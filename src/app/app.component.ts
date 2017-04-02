@@ -54,16 +54,22 @@ export class AppComponent {
 }
   toggleLoading() {
     this.loading = !this.loading;
+    console.log('loading status', this.loading);
 }  
   onIdSubmit(id) {
-    this.toggleLoading();
-    // console.log('you submitted', id);
+    this.loading = true;
+     console.log('loading status changed', this.loading);
     this.appService.computeChances(id)
       .subscribe(resp => {
         this.dataArrived = true;
         this.chances = resp;
-        this.toggleLoading();
+        
         console.log('chances calculated', resp);
-      });
+      },
+      err => { (console.log('error occured'), err) },
+      () => {
+      // this.loading = false;
+    }
+    );
   }
 }

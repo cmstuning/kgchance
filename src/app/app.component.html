@@ -4,7 +4,7 @@
 
   <!--<div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">-->
     <div fxFlex="50" fxFlexOffset="25">
-      LOGO WILL GO THERE
+      <!--LOGO WILL GO THERE-->
     </div>
   </div>
 <div fxLayout="row" >
@@ -21,6 +21,12 @@
     <button md-raised-button (click)="onIdSubmit(childId.value)">Check!</button>
   
   </div>
+
+  <div *ngIf="loading">
+  <md-progress-bar  mode="indeterminate"></md-progress-bar>
+  <p>Loading ... </p>
+  </div>
+
   <div *ngIf="dataArrived">
 
   <div *ngFor="let chance of chances">
@@ -38,14 +44,18 @@
  <p>
    Your chance is <strong> {{getChanceText(chance.relative, chance.realQueueLength)}} </strong>
  </p>
- <p>Place: {{chance.place}} </p>
- <p>Priority: {{chance.priority}} </p>
- <p>Position after draft: {{chance.relative}} </p>
+ <p>Position assigned: {{chance.place}} </p>
+<p>Projected position after draft: {{chance.relative}} </p>
+
+ 
  
 </md-card>
 </div>
   </div>
   </div>
+
+  
+
   </div>
 </div>
 </div>
