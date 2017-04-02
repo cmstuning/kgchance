@@ -1,26 +1,49 @@
 <div class="containerX">
-<div fxLayout="row" >
+  <div fxLayout="row" >
   
 
   <!--<div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">-->
     <div fxFlex="50" fxFlexOffset="25">
+      LOGO WILL GO THERE
+    </div>
+  </div>
+<div fxLayout="row" >
+  
+
+  <!--<div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">-->
+    <div fxFlex="40" fxFlexOffset="30">
     <md-input-container style="width:100%;">
       <input mdInput #childId maxlength="10" placeholder="Child ID" value="" style="text-align:center">
       <md-hint align="end">{{childId.value.length}} / 10</md-hint>
     </md-input-container>
-    <div class="button-row">
+    <div class="button-row" style="text-align: center">
    
     <button md-raised-button (click)="onIdSubmit(childId.value)">Check!</button>
   
   </div>
   <div *ngIf="dataArrived">
+
   <div *ngFor="let chance of chances">
+<div>
 <md-card>
- <p>Carden: {{chance.garden}} </p>
+  <md-card-title>{{chance.garden}}</md-card-title>
+
+  <md-progress-bar
+          
+          color="#CCCCCC"
+          mode="determinate"
+          [value]="getVisualPercent(chance.realPlace, chance.realQueueLength, chance.relative)"
+          >
+      </md-progress-bar>
+ <p>
+   Your chance is <strong> {{getChanceText(chance.relative, chance.realQueueLength)}} </strong>
+ </p>
  <p>Place: {{chance.place}} </p>
  <p>Priority: {{chance.priority}} </p>
- <p>Chance: {{chance.chance}} </p>
+ <p>Position after draft: {{chance.relative}} </p>
+ 
 </md-card>
+</div>
   </div>
   </div>
   </div>
