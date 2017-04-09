@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {AppService} from "./app.service";
+import { AppService } from "./app.service";
+import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,10 @@ export class AppComponent {
   loading: boolean = false; // will use for spinner
   dataArrived: boolean = false;
   chances: any[];
-  constructor(private appService: AppService) {
+  constructor(
+    private appService: AppService,
+    public snackBar: MdSnackBar
+  ) {
 
   }
 
@@ -66,7 +70,10 @@ export class AppComponent {
         
         console.log('chances calculated', resp);
       },
-      err => { (console.log('error occured'), err) },
+      err => {
+        let snackBarRef = this.snackBar.open('An Error occured!', 'Close');
+        (console.log('error occured'), err)
+      },
       () => {
       // this.loading = false;
     }
