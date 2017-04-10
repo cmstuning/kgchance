@@ -21,12 +21,12 @@ export class KgChanceService {
         for (const person of rawData) {
           persons.push(person.personalNo);
 
-          const priority = AppService.computePriority(person.priorities);
+          const priority = KgChanceService.computePriority(person.priorities);
 
           for (const choice of person.choices) {
             const garden = choice.garden;
             if (choice.place !== 0) {
-              const gardenPriority = AppService.computePriority(choice.priorities);
+              const gardenPriority = KgChanceService.computePriority(choice.priorities);
               if (priorityQueue[garden] === undefined) {
                 priorityQueue[garden] = [];
               }
@@ -42,8 +42,8 @@ export class KgChanceService {
         this.persons.next(persons);
 
         for (const garden of Object.keys(priorityQueue)) {
-          // priorityQueue[garden].sort(AppService.compareByPriorityAndPlaceDesc);
-          priorityQueue[garden].sort(AppService.compareByPlaceAsc);
+          // priorityQueue[garden].sort(KgChanceService.compareByPriorityAndPlaceDesc);
+          priorityQueue[garden].sort(KgChanceService.compareByPlaceAsc);
         }
 
         return priorityQueue;
@@ -59,7 +59,7 @@ export class KgChanceService {
     return this.priorityQueue
       .take(1)
       .combineLatest(this.gardenService.getQuotas(), (priorityQueue, gardenQuotas) => {
-        const result = AppService.computeChances(priorityQueue, gardenQuotas, personalNo);
+        const result = KgChanceService.computeChances(priorityQueue, gardenQuotas, personalNo);
 
         if (result.length === 0) {
           return Observable.throw(new Error('There are no data'));
@@ -126,7 +126,7 @@ export class KgChanceService {
       const gardenQueue = queuePlaceCache[garden];
 
       if (gardenQueue[personalNo_] === undefined) {
-        return (gardenQueue[personalNo_] = AppService.findQueuePlace(priorityQueue[garden], personalNo_));
+        return (gardenQueue[personalNo_] = KgChanceService.findQueuePlace(priorityQueue[garden], personalNo_));
       }
       return gardenQueue[personalNo_];
     }
@@ -134,22 +134,22 @@ export class KgChanceService {
     for (const chosenGarden of Object.keys(priorityQueue)) {
       const gardenQueue = priorityQueue[chosenGarden];
 
-      // const queuePlace = AppService.findQueuePlace(gardenQueue, personalNo);
+      // const queuePlace = KgChanceService.findQueuePlace(gardenQueue, personalNo);
       const queuePlace = getQueuePlace(chosenGarden, personalNo);
       let realPlace = queuePlace;
 
       if (queuePlace !== -1) {
-        const gardenQuota = AppService.getGardenQuota(gardenQuotas, chosenGarden);
+        const gardenQuota = KgChanceService.getGardenQuota(gardenQuotas, chosenGarden);
         const relatedInfo = gardenQueue[queuePlace];
         for (let i = 0; i < queuePlace; i++) {
           const person = gardenQueue[i];
           for (const garden of Object.keys(priorityQueue)) {
             if (garden !== chosenGarden) {
-              // const j = AppService.findQueuePlace(priorityQueue[garden], person.personalNo);
+              // const j = KgChanceService.findQueuePlace(priorityQueue[garden], person.personalNo);
               const j = getQueuePlace(garden, person.personalNo);
 
               if (j !== -1) {
-                if (j < AppService.getGardenQuota(gardenQuotas, garden)) {
+                if (j < KgChanceService.getGardenQuota(gardenQuotas, garden)) {
                   --realPlace;
                   break;
                 }
@@ -170,7 +170,7 @@ export class KgChanceService {
           priority: relatedInfo.priority,
           queueLength: gardenQueue.length,
           realQueueLength: gardenQueue.length - (relatedInfo.place - realPlace),
-          // chance: AppService.computeChance(gardenQuota, realPlace),
+          // chance: KgChanceService.computeChance(gardenQuota, realPlace),
           relative: realPlace - gardenQuota
         });
       }
